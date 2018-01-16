@@ -8,7 +8,9 @@ import org.usfirst.frc.team63.robot.util.DriveSignal;
 import org.usfirst.frc.team63.robot.util.DriveVelocity;
 import org.usfirst.frc.team63.robot.util.RigidTransform2d;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -34,7 +36,7 @@ public class DriveSubsystem extends Subsystem {
     }
 	
 	private static final int kVelocityControlSlot = 0;
-    public final CANTalon TalonFrontLeft, TalonFrontRight, TalonBackLeft, TalonBackRight;
+    public final TalonSRX  TalonFrontLeft, TalonFrontRight, TalonBackLeft, TalonBackRight;
     
     private final AHRS imu_; 
     
@@ -43,10 +45,10 @@ public class DriveSubsystem extends Subsystem {
 	public FieldOrientedDriveHelper mDriveHelper = new FieldOrientedDriveHelper();
 	
     public DriveSubsystem() {
-    	TalonFrontLeft = new CANTalon(RobotMap.FRONT_LEFT_MOTOR);
-    	TalonBackLeft = new CANTalon(RobotMap.REAR_LEFT_MOTOR);
-    	TalonFrontRight = new CANTalon(RobotMap.FRONT_RIGHT_MOTOR);
-    	TalonBackRight = new CANTalon(RobotMap.REAR_RIGHT_MOTOR);
+    	TalonFrontLeft = new TalonSRX(RobotMap.FRONT_LEFT_MOTOR);
+    	TalonBackLeft = new TalonSRX(RobotMap.REAR_LEFT_MOTOR);
+    	TalonFrontRight = new TalonSRX(RobotMap.FRONT_RIGHT_MOTOR);
+    	TalonBackRight = new TalonSRX(RobotMap.REAR_RIGHT_MOTOR);
     	
         imu_ = new AHRS(SPI.Port.kMXP);        
 
@@ -57,38 +59,43 @@ public class DriveSubsystem extends Subsystem {
     
     public void setTalonBaseConfigurationAuto()
     {
-    	TalonFrontLeft.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonFrontLeft.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonFrontLeft.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonFrontLeft.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);  
     	
-    	TalonBackLeft.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonBackLeft.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonBackLeft.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonBackLeft.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonBackLeft.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonBackLeft.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);   	    
     	
-    	TalonFrontRight.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonFrontRight.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonFrontRight.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonFrontRight.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonFrontRight.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonFrontRight.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);   	    
     	
-    	TalonBackRight.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonBackRight.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonBackRight.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonBackRight.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonBackRight.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonBackRight.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);    	    
     	
     	// Setup feedback params
-    	TalonFrontLeft.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonFrontLeft.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
-    	TalonFrontLeft.configEncoderCodesPerRev(250);
-    	TalonFrontLeft.reverseSensor(true);
+    	TalonFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonFrontLeft.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.setInverted(true);
     	
-    	TalonBackLeft.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonBackLeft.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
-    	TalonBackLeft.configEncoderCodesPerRev(250);
-    	TalonBackLeft.reverseSensor(true);
+    	TalonBackLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonBackLeft.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonBackLeft.setInverted(true);
     	
-    	TalonFrontRight.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonFrontRight.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
+    	TalonBackRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonBackRight.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonBackRight.setInverted(true);
+    	
+    	TalonFrontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonFrontRight.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
     	TalonFrontRight.configEncoderCodesPerRev(250);
     	TalonFrontRight.reverseSensor(false);
-    	
-    	TalonBackRight.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonBackRight.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
-    	TalonBackRight.configEncoderCodesPerRev(250);
-    	TalonBackRight.reverseSensor(false);
     	
         // Load velocity control gains
     	TalonFrontLeft.setPID(RobotMap.kDriveVelocityKpAuto, RobotMap.kDriveVelocityKiAuto, RobotMap.kDriveVelocityKdAuto,
@@ -110,36 +117,44 @@ public class DriveSubsystem extends Subsystem {
 
     public void setTalonBaseConfigurationTelop()
     {
-    	TalonFrontLeft.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonFrontLeft.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonFrontLeft.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonFrontLeft.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);  
     	
-    	TalonBackLeft.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonBackLeft.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonBackLeft.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonBackLeft.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonBackLeft.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonBackLeft.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);   	    
     	
-    	TalonFrontRight.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonFrontRight.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonFrontRight.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonFrontRight.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonFrontRight.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonFrontRight.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);   	    
     	
-    	TalonBackRight.configNominalOutputVoltage(+0.0f, -0.0f);
-    	TalonBackRight.configPeakOutputVoltage(+12.0f, -12.0f);    	    
+    	TalonBackRight.configNominalOutputForward(0.0, RobotMap.kTimeoutMs);
+    	TalonBackRight.configNominalOutputReverse(-0.0, RobotMap.kTimeoutMs);
+    	TalonBackRight.configPeakOutputForward(+12.0, RobotMap.kTimeoutMs);    	    
+    	TalonBackRight.configPeakOutputReverse(+12.0, RobotMap.kTimeoutMs);     	    
     	
     	// Setup feedback params
-    	TalonFrontLeft.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonFrontLeft.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
+    	TalonFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonFrontLeft.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
     	TalonFrontLeft.configEncoderCodesPerRev(250);
     	TalonFrontLeft.reverseSensor(true);
     	
-    	TalonBackLeft.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonBackLeft.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
+    	TalonBackLeft.setFeedbackDevice(TalonSRX.FeedbackDevice.QuadEncoder);
+    	TalonBackLeft.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
     	TalonBackLeft.configEncoderCodesPerRev(250);
     	TalonBackLeft.reverseSensor(true);
     	
-    	TalonFrontRight.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonFrontRight.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
+    	TalonFrontRight.setFeedbackDevice(TalonSRX.FeedbackDevice.QuadEncoder);
+    	TalonFrontRight.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
     	TalonFrontRight.configEncoderCodesPerRev(250);
     	TalonFrontRight.reverseSensor(false);
     	
-    	TalonBackRight.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	TalonBackRight.setStatusFrameRateMs(CANTalon.StatusFrameRate.QuadEncoder, 10);
+    	TalonBackRight.setFeedbackDevice(TalonSRX.FeedbackDevice.QuadEncoder);
+    	TalonBackRight.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
     	TalonBackRight.configEncoderCodesPerRev(250);
     	TalonBackRight.reverseSensor(false);
     	
@@ -169,10 +184,10 @@ public class DriveSubsystem extends Subsystem {
     	setBrakeMode(false);
     }
     
-    private void configureTalonForOpenLoop(CANTalon talon)
+    private void configureTalonForOpenLoop(TalonSRX talon)
     {
     	talon.setVoltageRampRate(120.0f);
-    	talon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+    	talon.changeControlMode(TalonSRX.TalonControlMode.PercentVbus);
     	talon.set(0);
     	talon.reverseOutput(false);
     }
@@ -185,10 +200,10 @@ public class DriveSubsystem extends Subsystem {
         setBrakeMode(true);
     }
     
-    private void configureTalonForSpeedControl(CANTalon talon, boolean reverseOutput)
+    private void configureTalonForSpeedControl(TalonSRX talon, boolean reverseOutput)
     {
     	talon.setVoltageRampRate(0.0f);
-    	talon.changeControlMode(CANTalon.TalonControlMode.Speed);
+    	talon.changeControlMode(TalonSRX.TalonControlMode.Speed);
     	talon.setProfile(kVelocityControlSlot);
     	talon.setAllowableClosedLoopErr(RobotMap.kDriveVelocityAllowableError);       
     	talon.reverseOutput(reverseOutput);
