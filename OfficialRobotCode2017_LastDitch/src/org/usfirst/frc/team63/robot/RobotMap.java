@@ -18,6 +18,7 @@ public class RobotMap {
 	//Config params for closed loop position control
 
 	public static final int kTimeoutMs = 10;
+	public static final int pidIndex = 0;
 	public static final double kP_position_strafe = 0.02;
 	public static final double kI_position_strafe = 0.0;
 	public static final double kD_position_strafe = 0.0;

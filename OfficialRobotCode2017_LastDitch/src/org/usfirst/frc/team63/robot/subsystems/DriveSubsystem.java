@@ -243,6 +243,7 @@ public class DriveSubsystem extends Subsystem {
             configureTalonsForOpenLoop();
             driveControlState_ = DriveControlState.OPEN_LOOP;
         }
+        //idk wtf im doing with control modes
         TalonFrontLeft.set(signal.leftFrontMotor);
         TalonBackLeft.set(signal.leftRearMotor);
         TalonFrontRight.set(signal.rightFrontMotor);
@@ -289,7 +290,8 @@ public class DriveSubsystem extends Subsystem {
         updateVelocitySetpoint(Kinematics.inverseKinematics(new RigidTransform2d.Delta(0, 0, degrees_per_sec)));
     }
     
-    private synchronized void updateVelocitySetpoint(DriveVelocity setpoint) {    	
+    private synchronized void updateVelocitySetpoint(DriveVelocity setpoint) {
+    	//again, control modes i need help on
 		TalonFrontLeft.set(inchesPerSecondToRpm(setpoint.left_front));
 		TalonBackLeft.set(inchesPerSecondToRpm(setpoint.left_rear));
 		TalonFrontRight.set(inchesPerSecondToRpm(setpoint.right_front));
@@ -302,15 +304,15 @@ public class DriveSubsystem extends Subsystem {
     }
     
     public synchronized void resetEncoders() {
-    	TalonFrontLeft.setPosition(0);
-    	TalonBackLeft.setPosition(0);
-    	TalonFrontRight.setPosition(0);
-    	TalonBackRight.setPosition(0);
+    	TalonFrontLeft.setSelectedSensorPosition(0, 0, RobotMap.kTimeoutMs);
+    	TalonBackLeft.setSelectedSensorPosition(0, 0, RobotMap.kTimeoutMs);
+    	TalonFrontRight.setSelectedSensorPosition(0, 0, RobotMap.kTimeoutMs);
+    	TalonBackRight.setSelectedSensorPosition(0, 0, RobotMap.kTimeoutMs);
 		
-    	TalonFrontLeft.setEncPosition(0);
-    	TalonBackLeft.setEncPosition(0);
-    	TalonFrontRight.setEncPosition(0);
-    	TalonBackRight.setEncPosition(0);
+    	TalonFrontLeft.getSensorCollection(). setQuadraturePosition (kVelocityControlSlot, 10);
+    	TalonBackLeft.getSensorCollection(). setQuadraturePosition (kVelocityControlSlot, 10);
+    	TalonFrontRight.getSensorCollection(). setQuadraturePosition (kVelocityControlSlot, 10);
+    	TalonBackRight.getSensorCollection(). setQuadraturePosition (kVelocityControlSlot, 10);
     }    
     
 	public synchronized void outputToSmartDashboard()
@@ -363,19 +365,19 @@ public class DriveSubsystem extends Subsystem {
     }
     
     public double getFrontLeftDistanceInches() {
-        return rotationsToInches(TalonFrontLeft.getPosition());
+        return rotationsToInches(TalonFrontLeft.getSelectedSensorPosition(RobotMap.pidIndex));
     }
 
     public double getRearLeftDistanceInches() {
-        return rotationsToInches(TalonBackLeft.getPosition());
+        return rotationsToInches(TalonBackLeft.getSelectedSensorPosition(RobotMap.pidIndex));
     }
     
     public double getFrontRightDistanceInches() {
-        return rotationsToInches(TalonFrontRight.getPosition());
+        return rotationsToInches(TalonFrontRight.getSelectedSensorPosition(RobotMap.pidIndex));
     }
 
     public double getRearRightDistanceInches() {
-        return rotationsToInches(TalonBackRight.getPosition());
+        return rotationsToInches(TalonBackRight.getSelectedSensorPosition(RobotMap.pidIndex));
     }
 
     public double getAverageVelocity()
@@ -384,19 +386,19 @@ public class DriveSubsystem extends Subsystem {
     }
     
     public double getFrontLeftVelocityInchesPerSec() {
-        return rpmToInchesPerSecond(TalonFrontLeft.getSpeed());
+        return rpmToInchesPerSecond(TalonFrontLeft.getSelectedSensorVelocity(RobotMap.pidIndex));
     }
    
     public double getRearLeftVelocityInchesPerSec() {
-        return rpmToInchesPerSecond(TalonBackLeft.getSpeed());
+        return rpmToInchesPerSecond(TalonBackLeft.getSelectedSensorVelocity(RobotMap.pidIndex));
     }
     
     public double getFrontRightVelocityInchesPerSec() {
-        return rpmToInchesPerSecond(TalonFrontRight.getSpeed());
+        return rpmToInchesPerSecond(TalonFrontRight.getSelectedSensorVelocity(RobotMap.pidIndex));
     }
    
     public double getRearRightVelocityInchesPerSec() {
-        return rpmToInchesPerSecond(TalonBackRight.getSpeed());
+        return rpmToInchesPerSecond(TalonBackRight.getSelectedSensorVelocity(RobotMap.pidIndex));
     }
     
     private static double rotationsToInches(double rotations) {
