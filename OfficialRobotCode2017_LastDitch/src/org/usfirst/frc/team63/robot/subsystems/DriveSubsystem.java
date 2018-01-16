@@ -202,7 +202,7 @@ public class DriveSubsystem extends Subsystem {
     private void configureTalonForOpenLoop(TalonSRX talon)
     {
     	talon.configOpenloopRamp(0, RobotMap.kTimeoutMs); //param 1 =seconds from neutral throttle to full throttle
-    	talon.set(TalonSRX.TalonControlMode.PercentVbus, 0);
+    	talon.set(PercentVbus, 0);
     	talon.setInverted(true);
     }
     
