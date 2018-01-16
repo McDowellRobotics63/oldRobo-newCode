@@ -201,10 +201,9 @@ public class DriveSubsystem extends Subsystem {
     
     private void configureTalonForOpenLoop(TalonSRX talon)
     {
-    	talon.setVoltageRampRate(120.0f);
-    	talon.changeControlMode(TalonSRX.TalonControlMode.PercentVbus);
-    	talon.set(0);
-    	talon.reverseOutput(false);
+    	talon.configOpenloopRamp(0, RobotMap.kTimeoutMs); //param 1 =seconds from neutral throttle to full throttle
+    	talon.set(TalonSRX.TalonControlMode.PercentVbus, 0);
+    	talon.setInverted(true);
     }
     
     private void configureTalonsForSpeedControl() {    	
@@ -217,19 +216,19 @@ public class DriveSubsystem extends Subsystem {
     
     private void configureTalonForSpeedControl(TalonSRX talon, boolean reverseOutput)
     {
-    	talon.setVoltageRampRate(0.0f);
+    	talon.configOpenloopRamp(0.0, RobotMap.kTimeoutMs);
     	talon.changeControlMode(TalonSRX.TalonControlMode.Speed);
-    	talon.setProfile(kVelocityControlSlot);
-    	talon.setAllowableClosedLoopErr(RobotMap.kDriveVelocityAllowableError);       
-    	talon.reverseOutput(reverseOutput);
+    	talon.selectProfileSlot(kVelocityControlSlot, 0); // param 2 = pid index
+    	talon.configAllowableClosedloopError(kVelocityControlSlot, RobotMap.kDriveVelocityAllowableError, RobotMap.kTimeoutMs);       
+    	talon.setInverted(reverseOutput);
     }
     
     public void setBrakeMode(boolean on) {
         if (isBrakeMode_ != on) {
-        	TalonFrontLeft.enableBrakeMode(on);
-        	TalonBackLeft.enableBrakeMode(on);
-        	TalonFrontRight.enableBrakeMode(on);
-        	TalonBackRight.enableBrakeMode(on);
+        	TalonFrontLeft.setNeutralMode(null);
+        	TalonBackLeft.setNeutralMode(null);
+        	TalonFrontRight.setNeutralMode(null);
+        	TalonBackRight.setNeutralMode(null);
             isBrakeMode_ = on;
         }
     }
