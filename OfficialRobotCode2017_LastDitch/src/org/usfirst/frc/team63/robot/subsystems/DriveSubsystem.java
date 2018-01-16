@@ -93,26 +93,35 @@ public class DriveSubsystem extends Subsystem {
     	TalonBackRight.setInverted(true);
     	
     	TalonFrontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-    	TalonFrontRight.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
-    	TalonFrontRight.configEncoderCodesPerRev(250);
-    	TalonFrontRight.reverseSensor(false);
+    	TalonFrontRight.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonFrontRight.setInverted(true);
     	
         // Load velocity control gains
-    	TalonFrontLeft.setPID(RobotMap.kDriveVelocityKpAuto, RobotMap.kDriveVelocityKiAuto, RobotMap.kDriveVelocityKdAuto,
-    			RobotMap.kDriveVelocityKfAuto, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	TalonFrontLeft.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
     	
-    	TalonBackLeft.setPID(RobotMap.kDriveVelocityKpAuto, RobotMap.kDriveVelocityKiAuto, RobotMap.kDriveVelocityKdAuto,
-    			RobotMap.kDriveVelocityKfAuto, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	TalonFrontRight.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
     	
-    	TalonFrontRight.setPID(RobotMap.kDriveVelocityKpAuto, RobotMap.kDriveVelocityKiAuto, RobotMap.kDriveVelocityKdAuto,
-    			RobotMap.kDriveVelocityKfAuto, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	TalonBackLeft.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
     	
-    	TalonBackRight.setPID(RobotMap.kDriveVelocityKpAuto, RobotMap.kDriveVelocityKiAuto, RobotMap.kDriveVelocityKdAuto,
-    			RobotMap.kDriveVelocityKfAuto, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	
+    	TalonBackRight.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
+    	
     }
 
     public void setTalonBaseConfigurationTelop()
@@ -139,41 +148,47 @@ public class DriveSubsystem extends Subsystem {
     	
     	// Setup feedback params
     	TalonFrontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-    	TalonFrontLeft.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
-    	TalonFrontLeft.configEncoderCodesPerRev(250);
-    	TalonFrontLeft.reverseSensor(true);
+    	TalonFrontLeft.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.setInverted(true);
     	
-    	TalonBackLeft.setFeedbackDevice(TalonSRX.FeedbackDevice.QuadEncoder);
-    	TalonBackLeft.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
-    	TalonBackLeft.configEncoderCodesPerRev(250);
-    	TalonBackLeft.reverseSensor(true);
+    	TalonBackLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonBackLeft.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonBackLeft.setInverted(true);
     	
-    	TalonFrontRight.setFeedbackDevice(TalonSRX.FeedbackDevice.QuadEncoder);
-    	TalonFrontRight.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
-    	TalonFrontRight.configEncoderCodesPerRev(250);
-    	TalonFrontRight.reverseSensor(false);
+    	TalonBackRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonBackRight.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonBackRight.setInverted(true);
     	
-    	TalonBackRight.setFeedbackDevice(TalonSRX.FeedbackDevice.QuadEncoder);
-    	TalonBackRight.setStatusFrameRateMs(TalonSRX.StatusFrameRate.QuadEncoder, 10);
-    	TalonBackRight.configEncoderCodesPerRev(250);
-    	TalonBackRight.reverseSensor(false);
+    	TalonFrontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    	TalonFrontRight.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, RobotMap.kTimeoutMs);
+    	TalonFrontRight.setInverted(true);
     	
         // Load velocity control gains
-    	TalonFrontLeft.setPID(RobotMap.kDriveVelocityKpTelop, RobotMap.kDriveVelocityKiTelop, RobotMap.kDriveVelocityKdTelop,
-    			RobotMap.kDriveVelocityKfTelop, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	TalonFrontLeft.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonFrontLeft.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
     	
-    	TalonBackLeft.setPID(RobotMap.kDriveVelocityKpTelop, RobotMap.kDriveVelocityKiTelop, RobotMap.kDriveVelocityKdTelop,
-    			RobotMap.kDriveVelocityKfTelop, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	TalonFrontRight.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonFrontRight.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
     	
-    	TalonFrontRight.setPID(RobotMap.kDriveVelocityKpTelop, RobotMap.kDriveVelocityKiTelop, RobotMap.kDriveVelocityKdTelop,
-    			RobotMap.kDriveVelocityKfTelop, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	TalonBackLeft.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonBackLeft.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
     	
-    	TalonBackRight.setPID(RobotMap.kDriveVelocityKpTelop, RobotMap.kDriveVelocityKiTelop, RobotMap.kDriveVelocityKdTelop,
-    			RobotMap.kDriveVelocityKfTelop, RobotMap.kDriveVelocityIZone, RobotMap.kDriveVelocityRampRate,
-                RobotMap.kVelocityControlSlot);
+    	
+    	TalonBackRight.config_kP(0,RobotMap.kDriveVelocityKpAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_kI(0, RobotMap.kDriveVelocityKiAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_kD(0,RobotMap.kDriveVelocityKdAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_kF(0,RobotMap.kDriveVelocityKfAuto, RobotMap.kTimeoutMs);
+    	TalonBackRight.config_IntegralZone(0,RobotMap.kDriveVelocityIZone, RobotMap.kTimeoutMs);
+    	
     }
     
     private void configureTalonsForOpenLoop() {
