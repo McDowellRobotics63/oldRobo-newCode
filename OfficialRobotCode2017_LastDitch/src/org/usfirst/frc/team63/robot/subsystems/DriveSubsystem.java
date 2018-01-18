@@ -8,7 +8,9 @@ import org.usfirst.frc.team63.robot.util.DriveSignal;
 import org.usfirst.frc.team63.robot.util.DriveVelocity;
 import org.usfirst.frc.team63.robot.util.RigidTransform2d;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -20,8 +22,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
+
+
 public class DriveSubsystem extends Subsystem {
-	
+    private final AHRS imu_; 
 	//The front of the robot is the climber
     public enum RobotDriveDirection {
         ROBOT_FORWARD, ROBOT_BACK, ROBOT_LEFT, ROBOT_RIGHT, GEAR_FORWARD, GEAR_BACK, GEAR_LEFT, GEAR_RIGHT;
@@ -38,7 +42,7 @@ public class DriveSubsystem extends Subsystem {
 	private static final int kVelocityControlSlot = 0;
     public final TalonSRX  TalonFrontLeft, TalonFrontRight, TalonBackLeft, TalonBackRight;
     
-    private final AHRS imu_; 
+
     
     private boolean isBrakeMode_ = true;   
     private DriveControlState driveControlState_;
@@ -202,7 +206,7 @@ public class DriveSubsystem extends Subsystem {
     private void configureTalonForOpenLoop(TalonSRX talon)
     {
     	talon.configOpenloopRamp(0, RobotMap.kTimeoutMs); //param 1 =seconds from neutral throttle to full throttle
-    	talon.set(PercentVbus, 0);
+    	talon.set(ControlMode.PercentOutput, 0); // this is highkey wrong
     	talon.setInverted(true);
     }
     
@@ -217,7 +221,7 @@ public class DriveSubsystem extends Subsystem {
     private void configureTalonForSpeedControl(TalonSRX talon, boolean reverseOutput)
     {
     	talon.configOpenloopRamp(0.0, RobotMap.kTimeoutMs);
-    	talon.changeControlMode(TalonSRX.TalonControlMode.Speed);
+    	talon.set(ControlMode.Velocity, RobotMap.pidIndex);
     	talon.selectProfileSlot(kVelocityControlSlot, 0); // param 2 = pid index
     	talon.configAllowableClosedloopError(kVelocityControlSlot, RobotMap.kDriveVelocityAllowableError, RobotMap.kTimeoutMs);       
     	talon.setInverted(reverseOutput);
@@ -225,10 +229,10 @@ public class DriveSubsystem extends Subsystem {
     
     public void setBrakeMode(boolean on) {
         if (isBrakeMode_ != on) {
-        	TalonFrontLeft.setNeutralMode(null);
-        	TalonBackLeft.setNeutralMode(null);
-        	TalonFrontRight.setNeutralMode(null);
-        	TalonBackRight.setNeutralMode(null);
+        	TalonFrontLeft.setNeutralMode(NeutralMode.Brake);
+        	TalonBackLeft.setNeutralMode(NeutralMode.Brake);
+        	TalonFrontRight.setNeutralMode(NeutralMode.Brake);
+        	TalonBackRight.setNeutralMode(NeutralMode.Brake);
             isBrakeMode_ = on;
         }
     }
@@ -243,11 +247,11 @@ public class DriveSubsystem extends Subsystem {
             configureTalonsForOpenLoop();
             driveControlState_ = DriveControlState.OPEN_LOOP;
         }
-        //idk wtf im doing with control modes
-        TalonFrontLeft.set(signal.leftFrontMotor);
-        TalonBackLeft.set(signal.leftRearMotor);
-        TalonFrontRight.set(signal.rightFrontMotor);
-        TalonBackRight.set(signal.rightRearMotor);        
+     
+        TalonFrontLeft.set(ControlMode.PercentOutput, signal.leftFrontMotor);
+        TalonBackLeft.set(ControlMode.PercentOutput, signal.leftRearMotor);
+        TalonFrontRight.set(ControlMode.PercentOutput, signal.rightFrontMotor);
+        TalonBackRight.set(ControlMode.PercentOutput, signal.rightRearMotor);        
     }
     
     public synchronized void setVelocityZero()
@@ -292,10 +296,10 @@ public class DriveSubsystem extends Subsystem {
     
     private synchronized void updateVelocitySetpoint(DriveVelocity setpoint) {
     	//again, control modes i need help on
-		TalonFrontLeft.set(inchesPerSecondToRpm(setpoint.left_front));
-		TalonBackLeft.set(inchesPerSecondToRpm(setpoint.left_rear));
-		TalonFrontRight.set(inchesPerSecondToRpm(setpoint.right_front));
-		TalonBackRight.set(inchesPerSecondToRpm(setpoint.right_rear));  
+		TalonFrontLeft.set(ControlMode.Velocity, inchesPerSecondToRpm(setpoint.left_front));
+		TalonBackLeft.set(ControlMode.Velocity, inchesPerSecondToRpm(setpoint.left_rear));
+		TalonFrontRight.set(ControlMode.Velocity, inchesPerSecondToRpm(setpoint.right_front));
+		TalonBackRight.set(ControlMode.Velocity, inchesPerSecondToRpm(setpoint.right_rear));  
     }
 
     public synchronized void zeroSensors() {
@@ -332,6 +336,7 @@ public class DriveSubsystem extends Subsystem {
 		SmartDashboard.putBoolean("isNavXConnected", isNavXConnected());
 	}
     
+	
     public synchronized boolean isNavXCalibrating()
     {
     	return imu_.isCalibrating();
@@ -412,4 +417,6 @@ public class DriveSubsystem extends Subsystem {
 	public void initDefaultCommand() {
 		setDefaultCommand(new FieldOrientedDriveCommand());
 	}
+
+
 }
